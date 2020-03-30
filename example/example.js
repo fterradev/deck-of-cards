@@ -31,7 +31,7 @@ $topbar.appendChild($fan)
 $topbar.appendChild($poker)
 $topbar.appendChild($sort)
 
-var deck = Deck()
+var deck = Deck(undefined, 2)
 
 // easter eggs start
 
