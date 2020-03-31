@@ -151,15 +151,20 @@ var Deck = (function () {
     return document.createElement(type);
   }
 
-  var maxZ = 52;
+  var maxZ = undefined;
 
   function _card(i) {
+    var backColor = arguments.length <= 1 || arguments[1] === undefined ? "red" : arguments[1];
+    var numberOfDecks = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+
     var transform = prefix('transform');
+
+    maxZ = 52 * numberOfDecks;
 
     // calculate rank/suit, etc..
     var rank = i % 13 + 1;
-    var suit = i / 13 | 0;
-    var z = (52 - i) / 4;
+    var suit = i / 13 / numberOfDecks | 0;
+    var z = (maxZ - i) / 4;
 
     // create elements
     var $el = createElement('div');
@@ -179,6 +184,7 @@ var Deck = (function () {
     // add classes
     $face.classList.add('face');
     $back.classList.add('back');
+    $back.classList.add(backColor);
 
     // add default transform
     $el.style[transform] = translate(-z + 'px', -z + 'px');
@@ -536,7 +542,7 @@ var Deck = (function () {
     var rnd, temp;
 
     for (var i = array.length - 1; i; i--) {
-      rnd = Math.random() * i | 0;
+      rnd = Math.floor(Math.random() * (i + 1));
       temp = array[i];
       array[i] = array[rnd];
       array[rnd] = temp;
@@ -922,8 +928,12 @@ var Deck = (function () {
   }
 
   function Deck(jokers) {
+    var numberOfDecks = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+
+    var cardsPerDeck = jokers ? 55 : 52;
+
     // init cards array
-    var cards = new Array(jokers ? 55 : 52);
+    var cards = new Array(cardsPerDeck * numberOfDecks);
 
     var $el = createElement('div');
     var self = observable({ mount: mount, unmount: unmount, cards: cards, $el: $el });
@@ -947,7 +957,7 @@ var Deck = (function () {
 
     // create cards
     for (var i = cards.length; i; i--) {
-      card = cards[i - 1] = _card(i - 1);
+      card = cards[i - 1] = _card(i - 1, Math.trunc((i - 1) / cardsPerDeck) % 2 === 0 ? "red" : "blue", numberOfDecks);
       card.setSide('back');
       card.mount($el);
     }
