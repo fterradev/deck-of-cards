@@ -163,7 +163,7 @@ var Deck = (function () {
 
     // calculate rank/suit, etc..
     var rank = i % 13 + 1;
-    var suit = i / 13 / numberOfDecks | 0;
+    var suit = (i / 13 | 0) % 4;
     var z = (maxZ - i) / 4;
 
     // create elements
@@ -176,7 +176,7 @@ var Deck = (function () {
     var isFlippable = false;
 
     // self = card
-    var self = { i: i, rank: rank, suit: suit, pos: i, $el: $el, mount: mount, unmount: unmount, setSide: setSide };
+    var self = { i: i, rank: rank, suit: suit, pos: i, $el: $el, backColor: backColor, mount: mount, unmount: unmount, setSide: setSide };
 
     var modules = Deck.modules;
     var module;
